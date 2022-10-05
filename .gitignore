@@ -1,0 +1,7 @@
+# Project exclude paths
+/core/target/
+/core-api/target/
+/dependency-management-bom/target/
+/dto/target/
+/target/
+/utils/target/
