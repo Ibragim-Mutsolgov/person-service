@@ -1,0 +1,192 @@
+databaseChangeLog:
+  - changeSet:
+      id: DEV-1
+      author: Ibragim
+      changes:
+        - createTable:
+            tableName: medical_card
+            remarks: Данные медицинской карты
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: client_status
+                  type: char(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: med_status
+                  type: char(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: registry_dt
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: text
+        - createTable:
+            tableName: contact
+            remarks: Контакты
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: profile_link
+                  type: text
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: illness
+            remarks: Дата посещения
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: medical_card_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_medical_illness
+                    references: medical_card (id)
+                    nullable: false
+              - column:
+                  name: type_id
+                  type: bigint
+              - column:
+                  name: heaviness
+                  type: char(1)
+              - column:
+                  name: appearance_dttm
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: recovery_dt
+                  type: date
+        - createTable:
+            tableName: person_data
+            remarks: Данные пациента
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: auto
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: birth_dt
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: age
+                  type: smallint
+              - column:
+                  name: sex
+                  type: char(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contact_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_contact_persondt
+                    references: contact(id)
+                    nullable: false
+              - column:
+                  name: medical_card_id
+                  type: bigint
+                  constraints:
+                    unique: true
+                    foreignKeyName: fk_medical_persondt
+                    references: medical_card(id)
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: bigint
+                  constraints:
+                    check: parent_id <> id
+                    foreignKeyName: persondt_persondt
+                    references: person_data(id)
+        - createTable:
+            tableName: address
+            remarks: Адреса пациентов
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: contact_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_contact_address
+                    references: contact(id)
+                    nullable: false
+              - column:
+                  name: country_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: index
+                  type: int
+              - column:
+                  name: street
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: building
+                  type: varchar(32)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: flat
+                  type: varchar(32)

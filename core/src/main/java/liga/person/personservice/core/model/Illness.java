@@ -2,33 +2,27 @@ package liga.person.personservice.core.model;
 
 import lombok.Data;
 
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.TemporalType;
-import javax.persistence.Temporal;
+import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
+@Entity
 @Table(name = "illness")
 public class Illness {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "medical_card_id")
-    private Long medicalCardId;
+    private Long medical_card_id;
 
-    @Column(name = "type_id")
-    private Long typeId;
+    private Long type_id;
 
     private String heaviness;
 
-    @Column(name = "appearance_dttm")
-    private Timestamp appearanceDttm;
+    private Timestamp appearance_dttm;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "recovery_dt")
-    private Date recoveryDt;
+    private Date recovery_dt;
 }

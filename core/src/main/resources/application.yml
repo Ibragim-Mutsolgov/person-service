@@ -4,8 +4,12 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-  sql:
-    init:
-      mode: always
-      data-locations: classpath*:initialization/schema.sql
-      platform: org.hibernate.dialect.PostgreSQLDialect
+#  sql:
+#    init:
+#      mode: always
+#      data-locations: classpath*:initialization/schema.sql
+#      platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    change-log: classpath*:liquibase/changelog.yml
+  jpa:
+    open-in-view: false

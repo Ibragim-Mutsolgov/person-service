@@ -2,22 +2,20 @@ package liga.person.personservice.core.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
+@Entity
 @Table(name = "address")
 public class Address {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "contact_id")
-    private Long contactId;
+    private Long contact_id;
 
-    @Column(name = "country_id")
-    private Long countryId;
+    private Long country_id;
 
     private String city;
 
