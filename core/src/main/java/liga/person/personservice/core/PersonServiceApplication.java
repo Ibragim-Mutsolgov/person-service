@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @MapperScan("liga.person.personservice.core.mapper")
-@MappedTypes({Address.class, Contact.class, Illness.class, MedicalCard.class, PersonData.class})
+@MappedTypes({Address.class, Contact.class, Illness.class, MedicalCard.class, PersonData.class, User.class})
 @ComponentScan(basePackages = {"liga.person.personservice", "liga.medical.common.service"})
 public class PersonServiceApplication {
 

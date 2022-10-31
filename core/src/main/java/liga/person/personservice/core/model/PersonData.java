@@ -3,31 +3,51 @@ package liga.person.personservice.core.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Data
-@Entity
+@Entity(name = "PersonData")
 @Table(name = "person_data")
 public class PersonData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    private String last_name;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "parent_id")
+//    private PersonData parent;
 
-    private String first_name;
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
 
-    @Temporal(TemporalType.DATE)
-    private Date birth_dt;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
 
-    private int age;
+    @Column(name = "birth_dt", nullable = false)
+    private LocalDate birthDt;
 
+    @Column(name = "age")
+    private Integer age;
+
+    @Column(name = "sex", nullable = false, length = 1)
     private String sex;
 
-    private Long contact_id;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "contact_id", nullable = false)
+    private Contact contact;
 
-    private Long medical_card_id;
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "medical_card_id", nullable = false)
+    private MedicalCard medicalCard;
 
-    private Long parent_id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private PersonData parent;
+
+    @OneToMany(mappedBy = "parent")
+    private Set<PersonData> personData = new LinkedHashSet<>();
 }

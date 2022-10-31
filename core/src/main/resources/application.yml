@@ -13,3 +13,7 @@ spring:
     change-log: classpath*:liquibase/changelog.yml
   jpa:
     open-in-view: false
+    hibernate:
+      ddl-auto: update
+  thymeleaf:
+    cache: false

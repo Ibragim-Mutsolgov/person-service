@@ -3,19 +3,31 @@ package liga.person.personservice.core.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Data
-@Entity
+@Entity(name = "Contact")
 @Table(name = "contact")
 public class Contact {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    private String phone_number;
+    @Column(name = "phone_number", nullable = false, length = 32)
+    private String phoneNumber;
 
+    @Column(name = "email", nullable = false, length = 128)
     private String email;
 
-    private String profile_link;
+    @Lob
+    @Column(name = "profile_link")
+    private String profileLink;
+
+    @OneToMany(mappedBy = "contact")
+    private Set<PersonData> personData = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "contact")
+    private Set<Address> addresses = new LinkedHashSet<>();
 }

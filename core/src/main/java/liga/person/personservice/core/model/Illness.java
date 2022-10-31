@@ -3,26 +3,31 @@ package liga.person.personservice.core.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.Instant;
+import java.time.LocalDate;
 
 @Data
-@Entity
+@Entity(name = "Illness")
 @Table(name = "illness")
 public class Illness {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    private Long medical_card_id;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "medical_card_id", nullable = false)
+    private MedicalCard medicalCard;
 
-    private Long type_id;
+    @Column(name = "type_id")
+    private Long typeId;
 
+    @Column(name = "heaviness", length = 1)
     private String heaviness;
 
-    private Timestamp appearance_dttm;
+    @Column(name = "appearance_dttm", nullable = false)
+    private Instant appearanceDttm;
 
-    @Temporal(TemporalType.DATE)
-    private Date recovery_dt;
+    @Column(name = "recovery_dt")
+    private LocalDate recoveryDt;
 }
