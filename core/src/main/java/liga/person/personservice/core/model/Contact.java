@@ -17,6 +17,7 @@ import java.util.Set;
 @Entity(name = "Contact")
 @Table(name = "contact")
 public class Contact {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

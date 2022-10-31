@@ -18,6 +18,7 @@ import java.time.LocalDate;
 @Entity(name = "Illness")
 @Table(name = "illness")
 public class Illness {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
