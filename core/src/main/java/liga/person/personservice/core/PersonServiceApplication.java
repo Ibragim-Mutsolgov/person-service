@@ -1,6 +1,11 @@
 package liga.person.personservice.core;
 
-import liga.person.personservice.core.model.*;
+import liga.person.personservice.core.model.Address;
+import liga.person.personservice.core.model.Contact;
+import liga.person.personservice.core.model.Illness;
+import liga.person.personservice.core.model.MedicalCard;
+import liga.person.personservice.core.model.PersonData;
+import liga.person.personservice.core.model.User;
 import org.apache.ibatis.type.MappedTypes;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;

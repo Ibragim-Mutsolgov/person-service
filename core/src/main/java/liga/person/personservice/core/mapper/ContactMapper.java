@@ -1,7 +1,11 @@
 package liga.person.personservice.core.mapper;
 
 import liga.person.personservice.core.model.Contact;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Delete;
 
 import java.util.List;
 

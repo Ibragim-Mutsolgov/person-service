@@ -34,10 +34,10 @@ public class RegistrationController {
 
     @PostMapping
     public String getRegistration(UsersDataForRegistration usersDataForRegistration) {
-        if (usersDataForRegistration.getUsername() != null
-                && !Objects.equals(usersDataForRegistration.getUsername(), "")
-                && usersDataForRegistration.getPassword() != null
-                && !Objects.equals(usersDataForRegistration.getPassword(), "")) {
+        if (usersDataForRegistration.getUsername() != null &&
+                !Objects.equals(usersDataForRegistration.getUsername(), "") &&
+                usersDataForRegistration.getPassword() != null &&
+                !Objects.equals(usersDataForRegistration.getPassword(), "")) {
             User user = new User();
             user.setUsername(usersDataForRegistration.getUsername());
             user.setPassword(passwordEncoder.encode(usersDataForRegistration.getPassword()));

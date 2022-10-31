@@ -1,6 +1,13 @@
 package liga.person.personservice.core.model;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.JoinTable;
 import java.util.LinkedHashSet;
 import java.util.Set;
 

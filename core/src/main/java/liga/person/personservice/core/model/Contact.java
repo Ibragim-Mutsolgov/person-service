@@ -2,7 +2,14 @@ package liga.person.personservice.core.model;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.GenerationType;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
