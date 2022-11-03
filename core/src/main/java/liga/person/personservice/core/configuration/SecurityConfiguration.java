@@ -67,11 +67,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private BeforeAuthenticationFilter beforeAuthenticationFilter() throws Exception {
         BeforeAuthenticationFilter beforeAuthenticationFilter = new BeforeAuthenticationFilter(logsRepository);
         beforeAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        beforeAuthenticationFilter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(){
+        beforeAuthenticationFilter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
                 String username = request.getParameter("username");
-                SystemSettings.saveToDbAndFile(logsRepository, "Класс SecurityConfiguration метод beforeAuthenticationFilter(). Некорректно введены логин или пароль пользователем",username);
+                String text = "Класс SecurityConfiguration метод beforeAuthenticationFilter(). Некорректно введены логин или пароль пользователем";
+                SystemSettings.saveToDbAndFile(logsRepository, text, username);
                 super.setDefaultFailureUrl("/login?error");
                 super.onAuthenticationFailure(request, response, exception);
             }

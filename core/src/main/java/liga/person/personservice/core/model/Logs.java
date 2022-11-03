@@ -1,11 +1,21 @@
 package liga.person.personservice.core.model;
 
-import javax.persistence.*;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 import java.util.UUID;
 
 @Entity(name = "Logs")
 @Table(name = "logs")
+@NoArgsConstructor
 public class Logs {
 
     @Id
