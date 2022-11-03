@@ -3,37 +3,33 @@ package liga.person.personservice.core.controller;
 import liga.person.personservice.core.dto.UsersDataForRegistration;
 import liga.person.personservice.core.model.Role;
 import liga.person.personservice.core.model.User;
+import liga.person.personservice.core.repository.LogsRepository;
 import liga.person.personservice.core.repository.RoleRepository;
 import liga.person.personservice.core.repository.UserRepository;
+import liga.person.personservice.core.service.SystemSettings;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Logger;
 
 @Controller
+@AllArgsConstructor
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private final UserRepository userRepository;
+    private UserRepository userRepository;
 
-    private final RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
-    private final PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
-    private final Logger logger = Logger.getLogger(RegistrationController.class.getName());
-
-    public RegistrationController(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private LogsRepository logsRepository;
 
     @GetMapping
     public String getPage() {
@@ -56,10 +52,10 @@ public class RegistrationController {
             roles.add(role);
             user.setRoles(roles);
             userRepository.save(user);
-            logger.info(new Date() + ": Осуществлена регистрация пользователя " + user);
+            SystemSettings.saveToDbAndFile(logsRepository, "Класс RegistrationController метод getRegistration(). Осуществлена регистрация пользователя", user.getUsername());
             return "redirect:/login";
         }
-        logger.info(new Date() + ": Не удалось выполнить регистрацию пользователя " + usersDataForRegistration);
-        return "registration/error";
+        SystemSettings.saveToDbAndFile(logsRepository, "Класс RegistrationController метод getRegistration(). Некорректно введены данные", usersDataForRegistration.getUsername());
+        return "registration";
     }
 }

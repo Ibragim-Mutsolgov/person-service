@@ -2,7 +2,10 @@ package liga.person.personservice.core.controller;
 
 import liga.person.personservice.core.model.Role;
 import liga.person.personservice.core.model.User;
+import liga.person.personservice.core.repository.LogsRepository;
 import liga.person.personservice.core.repository.UserRepository;
+import liga.person.personservice.core.service.SystemSettings;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,35 +14,28 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
-import java.util.logging.Logger;
-
 @Controller
+@AllArgsConstructor
 @RequestMapping("/")
 public class HomeController {
 
-    private final UserRepository repository;
+    private UserRepository repository;
 
-    private final Logger logger = Logger.getLogger(HomeController.class.getName());
-
-    public HomeController(UserRepository repository) {
-        this.repository = repository;
-    }
+    private LogsRepository logsRepository;
 
     @GetMapping
-    public String getPageForUser(Model model) {
+    public String getPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) auth.getPrincipal();
         User user = repository.findByUsername(userDetails.getUsername());
-        String username = user.getUsername();
-        model.addAttribute("username", username);
+        model.addAttribute("username", user.getUsername());
         for (Role role : user.getRoles()) {
             if (role.getRole().equals("ADMIN")) {
-                logger.info(new Date() + ": Администратор " + username + " вошел в систему");
+                SystemSettings.saveToDbAndFile(logsRepository, "Класс HomeController метод getPage(). Администратор вошел в систему", user.getUsername());
                 return "adminPanel";
             }
         }
-        logger.info(new Date() + ": Пользователь " + username + " вошел в систему");
+        SystemSettings.saveToDbAndFile(logsRepository, "Класс HomeController метод getPage(). Пользователь вошел в систему", user.getUsername());
         return "home";
     }
 }

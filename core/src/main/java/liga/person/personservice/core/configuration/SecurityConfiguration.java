@@ -1,17 +1,26 @@
 package liga.person.personservice.core.configuration;
 
+import liga.person.personservice.core.repository.LogsRepository;
+import liga.person.personservice.core.service.SystemSettings;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +28,13 @@ import javax.sql.DataSource;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private DataSource dataSource;
+
+    private LogsRepository logsRepository;
+
+    @Bean
+    protected AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -35,17 +51,32 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/login", "/registration", "/medicalCard",
-                        "/address", "/contact", "/illness", "/personData").permitAll()
+                .antMatchers("/login", "/registration").permitAll()
                 .anyRequest().fullyAuthenticated()
                 .and()
-                .formLogin().loginPage("/login").permitAll()
+                .addFilterBefore(beforeAuthenticationFilter(), BeforeAuthenticationFilter.class)
+                .formLogin().loginPage("/login").usernameParameter("username").defaultSuccessUrl("/").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(
                         new AntPathRequestMatcher("/logout")
                 ).logoutSuccessUrl("/login")
                 .and()
                 .httpBasic();
+    }
+
+    private BeforeAuthenticationFilter beforeAuthenticationFilter() throws Exception {
+        BeforeAuthenticationFilter beforeAuthenticationFilter = new BeforeAuthenticationFilter(logsRepository);
+        beforeAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        beforeAuthenticationFilter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler(){
+            @Override
+            public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+                String username = request.getParameter("username");
+                SystemSettings.saveToDbAndFile(logsRepository, "Класс SecurityConfiguration метод beforeAuthenticationFilter(). Некорректно введены логин или пароль пользователем",username);
+                super.setDefaultFailureUrl("/login?error");
+                super.onAuthenticationFailure(request, response, exception);
+            }
+        });
+        return beforeAuthenticationFilter;
     }
 
     @Bean

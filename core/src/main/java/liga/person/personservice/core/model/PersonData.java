@@ -1,7 +1,5 @@
 package liga.person.personservice.core.model;
 
-import lombok.Data;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,7 +15,6 @@ import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-@Data
 @Entity(name = "PersonData")
 @Table(name = "person_data")
 public class PersonData {
@@ -56,4 +53,84 @@ public class PersonData {
 
     @OneToMany(mappedBy = "parentId")
     private Set<PersonData> personData = new LinkedHashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public LocalDate getBirthDt() {
+        return birthDt;
+    }
+
+    public void setBirthDt(LocalDate birthDt) {
+        this.birthDt = birthDt;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Contact getContactId() {
+        return contactId;
+    }
+
+    public void setContactId(Contact contactId) {
+        this.contactId = contactId;
+    }
+
+    public MedicalCard getMedicalCard() {
+        return medicalCard;
+    }
+
+    public void setMedicalCard(MedicalCard medicalCard) {
+        this.medicalCard = medicalCard;
+    }
+
+    public PersonData getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(PersonData parentId) {
+        this.parentId = parentId;
+    }
+
+    public Set<PersonData> getPersonData() {
+        return personData;
+    }
+
+    public void setPersonData(Set<PersonData> personData) {
+        this.personData = personData;
+    }
 }

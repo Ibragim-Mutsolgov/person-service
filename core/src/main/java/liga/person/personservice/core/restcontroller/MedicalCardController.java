@@ -2,7 +2,9 @@ package liga.person.personservice.core.restcontroller;
 
 import liga.person.personservice.core.dto.MedicalCardDto;
 import liga.person.personservice.core.mapper.MedicalCardMapper;
+import liga.person.personservice.core.repository.LogsRepository;
 import liga.person.personservice.core.service.SystemSettings;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,30 +15,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/medicalCard")
 public class MedicalCardController {
 
-    private final MedicalCardMapper mapper;
+    private MedicalCardMapper mapper;
 
-    private final Logger logger = Logger.getLogger(MedicalCardController.class.getName());
-
-    public MedicalCardController(MedicalCardMapper mapper) {
-        this.mapper = mapper;
-    }
+    private LogsRepository repository;
 
     @GetMapping
     public ResponseEntity<List<MedicalCardDto>> findAll() {
         try {
-            String username = SystemSettings.getUsername();
-            logger.info(new Date() + ": Вызов метода findAll() в классе MedicalCardController пользователем " + username);
+            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод findAll(). Вызов списка всех пользователей", SystemSettings.getUsername());
             return ResponseEntity.ok().body(mapper.findAll());
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
@@ -45,12 +41,11 @@ public class MedicalCardController {
     public ResponseEntity<MedicalCardDto> findById(@PathVariable(name = "id") Long id) {
         try {
             MedicalCardDto medicalCard = mapper.findByID(id);
-            String username = SystemSettings.getUsername();
-            logger.info(new Date() + ": Вызов метода findById(" + id + ") в классе MedicalCardController пользователем " + username);
+            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод findById(" + id + "). Поиск по id", SystemSettings.getUsername());
             if (medicalCard != null) return ResponseEntity.ok(medicalCard);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
@@ -59,11 +54,10 @@ public class MedicalCardController {
     public ResponseEntity<Object> save(@RequestBody MedicalCardDto medicalCard) {
         try {
             mapper.save(medicalCard);
-            String username = SystemSettings.getUsername();
-            logger.info(new Date() + ": Вызов метода save(" + medicalCard + ") в классе MedicalCardController пользователем " + username);
+            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод save(" + medicalCard + "). Сохранение данных", SystemSettings.getUsername());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
@@ -72,11 +66,10 @@ public class MedicalCardController {
     public ResponseEntity<Object> deleteById(@PathVariable(name = "id") Long id) {
         try {
             mapper.deleteById(id);
-            String username = SystemSettings.getUsername();
-            logger.info(new Date() + ": Вызов метода deleteById(" + id + ") в классе MedicalCardController пользователем " + username);
+            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод deleteById(" + id + "). Удаление данных", SystemSettings.getUsername());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
-            logger.info(e.getMessage());
+            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }

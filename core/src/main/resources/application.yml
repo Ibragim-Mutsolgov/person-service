@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/medicine
+    url: jdbc:postgresql://postgres:5432/medicine
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -17,3 +17,9 @@ spring:
       ddl-auto: update
   thymeleaf:
     cache: false
+server:
+  port: 8081
+logging:
+  file:
+    name: person-logs.log
+    path: classpath*:logs/person-logs.log
