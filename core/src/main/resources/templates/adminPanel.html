@@ -13,13 +13,14 @@
 <body style="display: flex; justify-content: center">
 <div style="margin: 0 auto; width: 80%; border: 1px solid black;
     border-radius: 0.3rem">
-    <div>
-        <div style="margin: 10px; justify-content: space-between; display: flex">
-            <div style="margin: 10px; justify-content: end; display: flex">
-                <form th:action="@{/logout}" target="_parent">
-                    <button class="btn btn-lg btn-primary btn-block" type="submit">Выйти</button>
-                </form>
-            </div>
+    <div style="margin: 20px">
+        <div style="justify-content: space-between; display: flex">
+            <form th:action="@{/logout}" target="_parent">
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Выйти</button>
+            </form>
+            <form th:action="@{/swagger-ui/}" target="_parent">
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Swagger</button>
+            </form>
         </div>
         <div>
             <h1 style="text-align: center">Добро пожаловать, администратор <span th:text="${username}"></span>!</h1>

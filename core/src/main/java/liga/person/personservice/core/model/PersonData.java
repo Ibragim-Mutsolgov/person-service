@@ -23,7 +23,7 @@ import java.util.Set;
 public class PersonData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -44,7 +44,7 @@ public class PersonData {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "contact_id", nullable = false)
-    private Contact contact;
+    private Contact contactId;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "medical_card_id", nullable = false)
@@ -52,8 +52,8 @@ public class PersonData {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    private PersonData parent;
+    private PersonData parentId;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parentId")
     private Set<PersonData> personData = new LinkedHashSet<>();
 }

@@ -1,5 +1,5 @@
 package liga.person.personservice.core.configuration;
-/*
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -38,8 +38,7 @@ public class SwaggerConfiguration {
                 .apiInfo(defaultApiInfo)
                 .produces(defaultProducesAndConsumes)
                 .consumes(defaultProducesAndConsumes)
-                .select().apis(RequestHandlerSelectors.basePackage("liga.person.personservice.core"))
+                .select().apis(RequestHandlerSelectors.basePackage("liga.person.personservice.core.restcontroller"))
                 .build();
     }
 }
-*/
