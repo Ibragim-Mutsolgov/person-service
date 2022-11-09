@@ -3,10 +3,8 @@ package liga.person.personservice.core.controller;
 import liga.person.personservice.core.dto.UsersDataForRegistration;
 import liga.person.personservice.core.model.Role;
 import liga.person.personservice.core.model.User;
-import liga.person.personservice.core.repository.LogsRepository;
-import liga.person.personservice.core.repository.RoleRepository;
-import liga.person.personservice.core.repository.UserRepository;
-import liga.person.personservice.core.service.SystemSettings;
+import liga.person.personservice.core.service.RoleService;
+import liga.person.personservice.core.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -17,22 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 
 @Controller
 @AllArgsConstructor
 @RequestMapping("/registration")
 public class RegistrationController {
 
-    private UserRepository userRepository;
+    private UserService userService;
 
-    private RoleRepository roleRepository;
+    private RoleService roleService;
 
     private PasswordEncoder passwordEncoder;
 
-    private LogsRepository logsRepository;
-
     @GetMapping
     public String getPage() {
+        Logger logger = Logger.getLogger(RegistrationController.class.getName());
+        logger.info("Класс: RegistrationController; метод: getPage()");
         return "registration";
     }
 
@@ -47,15 +46,15 @@ public class RegistrationController {
             user.setPassword(passwordEncoder.encode(usersDataForRegistration.getPassword()));
             Role role = new Role();
             role.setRole("USER");
-            role = roleRepository.save(role);
+            role = roleService.save(role);
             Set<Role> roles = new LinkedHashSet<>();
             roles.add(role);
             user.setRoles(roles);
-            userRepository.save(user);
-            SystemSettings.saveToDbAndFile(logsRepository, "Класс RegistrationController метод getRegistration(). Осуществлена регистрация пользователя", user.getUsername());
+            userService.save(user);
+            Logger logger = Logger.getLogger(RegistrationController.class.getName());
+            logger.info("Класс: RegistrationController; метод: getRegistration()");
             return "redirect:/login";
         }
-        SystemSettings.saveToDbAndFile(logsRepository, "Класс RegistrationController метод getRegistration(). Некорректно введены данные", usersDataForRegistration.getUsername());
         return "registration";
     }
 }

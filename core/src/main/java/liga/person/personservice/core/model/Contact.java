@@ -1,22 +1,12 @@
 package liga.person.personservice.core.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.OneToMany;
-import javax.persistence.Lob;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import javax.persistence.*;
 
 @Entity(name = "Contact")
 @Table(name = "contact")
 public class Contact {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -26,30 +16,15 @@ public class Contact {
     @Column(name = "email", nullable = false, length = 128)
     private String email;
 
-    @Lob
-    @Column(name = "profile_link")
+    @Column(name = "profile_link", nullable = false)
     private String profileLink;
 
-    @OneToMany(mappedBy = "contactId")
-    private Set<PersonData> personData = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "contact")
-    private Set<Address> addresses = new LinkedHashSet<>();
-
-    public Long getId() {
-        return id;
+    public String getProfileLink() {
+        return profileLink;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setProfileLink(String profileLink) {
+        this.profileLink = profileLink;
     }
 
     public String getEmail() {
@@ -60,27 +35,19 @@ public class Contact {
         this.email = email;
     }
 
-    public String getProfileLink() {
-        return profileLink;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setProfileLink(String profileLink) {
-        this.profileLink = profileLink;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
-    public Set<PersonData> getPersonData() {
-        return personData;
+    public Long getId() {
+        return id;
     }
 
-    public void setPersonData(Set<PersonData> personData) {
-        this.personData = personData;
-    }
-
-    public Set<Address> getAddresses() {
-        return addresses;
-    }
-
-    public void setAddresses(Set<Address> addresses) {
-        this.addresses = addresses;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

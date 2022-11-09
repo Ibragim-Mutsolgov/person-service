@@ -12,3 +12,6 @@ insert into person_data (id, last_name, first_name, birth_dt, age, sex, contact_
 
 insert into address (id, contact_id, country_id, city, index, street, building, flat) values ('1', '1', '1', 'Moscow', '1', 'Naberejnaya', '7', '5');
 insert into address (id, contact_id, country_id, city, index, street, building, flat) values ('2', '2', '2', 'Moscow', '1', 'Aviamotornaya', '8', '7');
+
+insert into signals(id, person_data_id, description, type) VALUES (1, 1, 'dawd', 'alert');
+insert into signals(id, person_data_id, description, type) VALUES (2, 2, 'dawd', 'alert');

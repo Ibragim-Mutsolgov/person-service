@@ -1,63 +1,60 @@
 package liga.person.personservice.core.restcontroller;
 
-import liga.person.personservice.core.dto.MedicalCardDto;
-import liga.person.personservice.core.mapper.MedicalCardMapper;
-import liga.person.personservice.core.repository.LogsRepository;
-import liga.person.personservice.core.service.SystemSettings;
-import lombok.AllArgsConstructor;
+import liga.person.personservice.core.model.MedicalCard;
+import liga.person.personservice.core.service.MedicalCardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/medicalCard")
 public class MedicalCardController {
 
-    private MedicalCardMapper mapper;
+    private MedicalCardService service;
 
-    private LogsRepository repository;
+    public MedicalCardController(MedicalCardService service) {
+        this.service = service;
+    }
 
     @GetMapping
-    public ResponseEntity<List<MedicalCardDto>> findAll() {
+    public ResponseEntity<List<MedicalCard>> findAll() {
         try {
-            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод findAll(). Вызов списка всех пользователей", SystemSettings.getUsername());
-            return ResponseEntity.ok().body(mapper.findAll());
+            return ResponseEntity.ok().body(service.findAll());
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MedicalCardDto> findById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<MedicalCard> findById(@PathVariable(name = "id") Long id) {
         try {
-            MedicalCardDto medicalCard = mapper.findByID(id);
-            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод findById(" + id + "). Поиск по id", SystemSettings.getUsername());
+            MedicalCard medicalCard = service.findById(id);
             if (medicalCard != null) return ResponseEntity.ok(medicalCard);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody MedicalCardDto medicalCard) {
+    public ResponseEntity<MedicalCard> save(@RequestBody MedicalCard medicalCard) {
         try {
-            mapper.save(medicalCard);
-            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод save(" + medicalCard + "). Сохранение данных", SystemSettings.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            MedicalCard medicalCardSave = service.save(medicalCard);
+            return ResponseEntity.status(HttpStatus.CREATED).body(medicalCardSave);
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MedicalCard> savePut(@PathVariable(name = "id") Long id, @RequestBody MedicalCard medicalCard) {
+        try {
+            MedicalCard medicalCardSave = service.savePut(id, medicalCard);
+            return ResponseEntity.ok().body(medicalCardSave);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -65,11 +62,9 @@ public class MedicalCardController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable(name = "id") Long id) {
         try {
-            mapper.deleteById(id);
-            SystemSettings.saveToDbAndFile(repository, "Класс MedicalCardController метод deleteById(" + id + "). Удаление данных", SystemSettings.getUsername());
+            service.deleteById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }

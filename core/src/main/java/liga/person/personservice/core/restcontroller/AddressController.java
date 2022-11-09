@@ -1,63 +1,60 @@
 package liga.person.personservice.core.restcontroller;
 
-import liga.person.personservice.core.dto.AddressDto;
-import liga.person.personservice.core.mapper.AddressMapper;
-import liga.person.personservice.core.repository.LogsRepository;
-import liga.person.personservice.core.service.SystemSettings;
-import lombok.AllArgsConstructor;
+import liga.person.personservice.core.model.Address;
+import liga.person.personservice.core.service.AddressService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/address")
 public class AddressController {
 
-    private AddressMapper mapper;
+    private AddressService service;
 
-    private LogsRepository repository;
+    public AddressController(AddressService service) {
+        this.service = service;
+    }
 
     @GetMapping
-    public ResponseEntity<List<AddressDto>> findAll() {
+    public ResponseEntity<List<Address>> findAll() {
         try {
-            SystemSettings.saveToDbAndFile(repository, "Класс AddressController метод findAll(). Вызов списка всех пользователей", SystemSettings.getUsername());
-            return ResponseEntity.ok().body(mapper.findAll());
+            return ResponseEntity.ok().body(service.findAll());
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AddressDto> findById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<Address> findById(@PathVariable(name = "id") Long id) {
         try {
-            AddressDto address = mapper.findByID(id);
-            SystemSettings.saveToDbAndFile(repository, "Класс AddressController метод findById(" + id + "). Поиск по id", SystemSettings.getUsername());
+            Address address = service.findById(id);
             if (address != null) return ResponseEntity.ok(address);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody AddressDto address) {
+    public ResponseEntity<Address> save(@RequestBody Address address) {
         try {
-            mapper.save(address);
-            SystemSettings.saveToDbAndFile(repository, "Класс AddressController метод save(" + address + "). Сохранение данных", SystemSettings.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            Address addressSave = service.save(address);
+            return ResponseEntity.status(HttpStatus.CREATED).body(addressSave);
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Address> savePut(@PathVariable(name = "id") Long id, @RequestBody Address address) {
+        try {
+            Address addressSave = service.savePut(id, address);
+            return ResponseEntity.ok().body(addressSave);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -65,11 +62,9 @@ public class AddressController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable(name = "id") Long id) {
         try {
-            mapper.deleteById(id);
-            SystemSettings.saveToDbAndFile(repository, "Класс AddressController метод deleteById(" + id + "). Удаление данных", SystemSettings.getUsername());
+            service.deleteById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }

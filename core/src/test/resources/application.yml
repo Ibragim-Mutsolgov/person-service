@@ -8,4 +8,4 @@ spring:
     hibernate:
       ddl-auto: create-drop
   liquibase:
-    change-log: classpath*:liquibase/changelog.yml
+    change-log: classpath*:liquibase/db.changelog-master.yaml

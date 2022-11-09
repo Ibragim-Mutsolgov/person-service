@@ -1,63 +1,56 @@
 package liga.person.personservice.core.restcontroller;
 
-import liga.person.personservice.core.dto.PersonDataDto;
-import liga.person.personservice.core.mapper.PersonDataMapper;
-import liga.person.personservice.core.repository.LogsRepository;
-import liga.person.personservice.core.service.SystemSettings;
-import lombok.AllArgsConstructor;
+import liga.person.personservice.core.model.PersonData;
+import liga.person.personservice.core.service.PersonDataService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
-@AllArgsConstructor
 @RequestMapping("/personData")
 public class PersonDataController {
 
-    private PersonDataMapper mapper;
-
-    private LogsRepository repository;
+    private PersonDataService service;
 
     @GetMapping
-    public ResponseEntity<List<PersonDataDto>> findAll() {
+    public ResponseEntity<List<PersonData>> findAll() {
         try {
-            SystemSettings.saveToDbAndFile(repository, "Класс PersonDataController метод findAll(). Вызов списка всех пользователей", SystemSettings.getUsername());
-            return ResponseEntity.ok().body(mapper.findAll());
+            return ResponseEntity.ok().body(service.findAll());
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PersonDataDto> findById(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<PersonData> findById(@PathVariable(name = "id") Long id) {
         try {
-            PersonDataDto personData = mapper.findByID(id);
-            SystemSettings.saveToDbAndFile(repository, "Класс PersonDataController метод findById(" + id + "). Поиск по id", SystemSettings.getUsername());
+            PersonData personData = service.findById(id);
             if (personData != null) return ResponseEntity.ok(personData);
             return ResponseEntity.notFound().build();
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping
-    public ResponseEntity<Object> save(@RequestBody PersonDataDto personData) {
+    public ResponseEntity<PersonData> save(@RequestBody PersonData personData) {
         try {
-            mapper.save(personData);
-            SystemSettings.saveToDbAndFile(repository, "Класс PersonDataController метод save(" + personData + "). Сохранение данных", SystemSettings.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            PersonData personDataSave = service.save(personData);
+            return ResponseEntity.status(HttpStatus.CREATED).body(personDataSave);
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonData> savePut(@PathVariable(name = "id") Long id, @RequestBody PersonData personData) {
+        try {
+            PersonData personDataSave = service.savePut(id, personData);
+            return ResponseEntity.ok().body(personDataSave);
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -65,11 +58,9 @@ public class PersonDataController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteById(@PathVariable(name = "id") Long id) {
         try {
-            mapper.deleteById(id);
-            SystemSettings.saveToDbAndFile(repository, "Класс PersonDataController метод deleteById(" + id + "). Удаление данных", SystemSettings.getUsername());
+            service.deleteById(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e) {
-            SystemSettings.saveToDbAndFile(repository, e.getMessage(), SystemSettings.getUsername());
             return ResponseEntity.badRequest().build();
         }
     }

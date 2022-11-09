@@ -1,16 +1,22 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://postgres:5432/medicine
+app:
+  dbone:
+    datasource:
+    url: jdbc:postgresql://localhost:5432/medicine
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-#  sql:
-#    init:
-#      mode: always
-#      data-locations: classpath*:initialization/schema.sql
-#      platform: org.hibernate.dialect.PostgreSQLDialect
-  liquibase:
-    change-log: classpath*:liquibase/changelog.yml
+  dbtwo:
+    datasource:
+      url: jdbc:postgresql://localhost:5432/db_log
+      username: postgres
+      password: postgres
+      driver-class-name: org.postgresql.Driver
+spring:
+  sql:
+    init:
+      mode: always
+      data-locations: classpath*:initialization/data.sql
+      platform: org.hibernate.dialect.PostgreSQLDialect
   jpa:
     open-in-view: false
     hibernate:
@@ -23,3 +29,7 @@ logging:
   file:
     name: person-logs.log
     path: classpath*:logs/person-logs.log
+datasource:
+  secondary:
+    liquibase:
+      liquibase/db.changelog-master.yaml

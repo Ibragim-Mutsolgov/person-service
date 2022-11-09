@@ -1,7 +1,5 @@
 package liga.person.personservice.core.configuration;
 
-import liga.person.personservice.core.repository.LogsRepository;
-import liga.person.personservice.core.service.SystemSettings;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,9 +25,7 @@ import java.io.IOException;
 @AllArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private DataSource dataSource;
-
-    private LogsRepository logsRepository;
+    private DataSource oneDataSource;
 
     @Bean
     protected AuthenticationManager authenticationManager() throws Exception {
@@ -41,7 +37,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth
                 .jdbcAuthentication().passwordEncoder(passwordEncoder())
                 .passwordEncoder(passwordEncoder())
-                .dataSource(dataSource)
+                .dataSource(oneDataSource)
                 .usersByUsernameQuery("select username, password, true from users where username=?")
                 .authoritiesByUsernameQuery("select role, true from roles where id=(select role_id from users_role where user_id=(select id from users where username=?))");
     }
@@ -65,14 +61,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     private BeforeAuthenticationFilter beforeAuthenticationFilter() throws Exception {
-        BeforeAuthenticationFilter beforeAuthenticationFilter = new BeforeAuthenticationFilter(logsRepository);
+        BeforeAuthenticationFilter beforeAuthenticationFilter = new BeforeAuthenticationFilter();
         beforeAuthenticationFilter.setAuthenticationManager(authenticationManager());
         beforeAuthenticationFilter.setAuthenticationFailureHandler(new SimpleUrlAuthenticationFailureHandler() {
             @Override
             public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
                 String username = request.getParameter("username");
                 String text = "Класс SecurityConfiguration метод beforeAuthenticationFilter(). Некорректно введены логин или пароль пользователем";
-                SystemSettings.saveToDbAndFile(logsRepository, text, username);
+                // SystemSettings.saveToDbAndFile(logsRepository, text, username);
                 super.setDefaultFailureUrl("/login?error");
                 super.onAuthenticationFailure(request, response, exception);
             }

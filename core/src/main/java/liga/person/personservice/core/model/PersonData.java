@@ -1,26 +1,13 @@
 package liga.person.personservice.core.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import javax.persistence.GenerationType;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Entity(name = "PersonData")
 @Table(name = "person_data")
 public class PersonData {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -39,75 +26,24 @@ public class PersonData {
     @Column(name = "sex", nullable = false, length = 1)
     private String sex;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "contact_id", nullable = false)
-    private Contact contactId;
+    private Contact contact;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "medical_card_id", nullable = false)
     private MedicalCard medicalCard;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "parent_id")
-    private PersonData parentId;
+    private PersonData parent;
 
-    @OneToMany(mappedBy = "parentId")
-    private Set<PersonData> personData = new LinkedHashSet<>();
-
-    public Long getId() {
-        return id;
+    public PersonData getParent() {
+        return parent;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public LocalDate getBirthDt() {
-        return birthDt;
-    }
-
-    public void setBirthDt(LocalDate birthDt) {
-        this.birthDt = birthDt;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public Contact getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(Contact contactId) {
-        this.contactId = contactId;
+    public void setParent(PersonData parent) {
+        this.parent = parent;
     }
 
     public MedicalCard getMedicalCard() {
@@ -118,19 +54,59 @@ public class PersonData {
         this.medicalCard = medicalCard;
     }
 
-    public PersonData getParentId() {
-        return parentId;
+    public Contact getContact() {
+        return contact;
     }
 
-    public void setParentId(PersonData parentId) {
-        this.parentId = parentId;
+    public void setContact(Contact contact) {
+        this.contact = contact;
     }
 
-    public Set<PersonData> getPersonData() {
-        return personData;
+    public String getSex() {
+        return sex;
     }
 
-    public void setPersonData(Set<PersonData> personData) {
-        this.personData = personData;
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    public LocalDate getBirthDt() {
+        return birthDt;
+    }
+
+    public void setBirthDt(LocalDate birthDt) {
+        this.birthDt = birthDt;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

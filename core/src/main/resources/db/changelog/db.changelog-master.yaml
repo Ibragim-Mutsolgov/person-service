@@ -190,59 +190,31 @@ databaseChangeLog:
               - column:
                   name: flat
                   type: varchar(32)
-#        - createTable:
-#            tableName: users
-#            remarks: Пользователи
-#            columns:
-#              - column:
-#                  name: id
-#                  type: bigint
-#                  constraints:
-#                    primaryKey: true
-#                    nullable: false
-#              - column:
-#                  name: username
-#                  type: varchar(255)
-#                  constraints:
-#                    nullable: false
-#              - column:
-#                  name: password
-#                  type: varchar(255)
-#                  constraints:
-#                    nullable: false
-#        - createTable:
-#            tableName: roles
-#            remarks: Роли
-#            columns:
-#              - column:
-#                  name: id
-#                  type: bigint
-#                  constraints:
-#                    primaryKey: true
-#                    nullable: false
-#              - column:
-#                  name: role
-#                  type: varchar(255)
-#                  constraints:
-#                    nullable: false
-#        - createTable:
-#            tableName: users_role
-#            remarks: Пользователи_Роли
-#            columns:
-#              - column:
-#                  name: user_id
-#                  type: bigint
-#                  constraints:
-#                    foreignKeyName: fkqpe36jsen4rslwfx5i6dj2fy8
-#                    references: users
-#                    nullable: false
-#              - column:
-#                  name: role_id
-#                  type: bigint
-#                  constraints:
-#                    foreignKeyName: fkeejqlb4gq1av9540jg66ju2pi
-#                    references: roles
-#                    nullable: false
-#              - addForeignKeyConstraint:
-#                  foreignKeyName: users_role_pkey
-#                  columnNames: user_id, role_id
+        - createTable:
+            tableName: signals
+            remarks: Сигналы
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: auto
+                  constraints:
+                    prymaryKey: true
+                    nullable: false
+              - column:
+                  name: person_data_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_persondt_signals
+                    references: person_data(id)
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false

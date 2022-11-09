@@ -1,7 +1,5 @@
 package liga.person.personservice.core.configuration;
 
-import liga.person.personservice.core.repository.LogsRepository;
-import liga.person.personservice.core.service.SystemSettings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
@@ -15,10 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class BeforeAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private LogsRepository repository;
-
-    public BeforeAuthenticationFilter(LogsRepository repository) {
-        this.repository = repository;
+    public BeforeAuthenticationFilter() {
         super.setUsernameParameter("username");
         super.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/login", "POST"));
     }
@@ -26,7 +21,7 @@ public class BeforeAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String username = request.getParameter("username");
-        SystemSettings.saveToDbAndFile(repository, "Класс BeforeAuthenticationFilter метод attemptAuthentication(). Попытка войти в систему", username);
+        // SystemSettings.saveToDbAndFile(repository, "Класс BeforeAuthenticationFilter метод attemptAuthentication(). Попытка войти в систему", username);
         return super.attemptAuthentication(request, response);
     }
 
