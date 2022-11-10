@@ -6,7 +6,6 @@ import liga.person.personservice.core.service.IllnessService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class IllnessServiceImpl implements IllnessService {

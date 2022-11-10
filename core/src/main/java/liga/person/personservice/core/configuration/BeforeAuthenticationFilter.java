@@ -21,7 +21,6 @@ public class BeforeAuthenticationFilter extends UsernamePasswordAuthenticationFi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String username = request.getParameter("username");
-        // SystemSettings.saveToDbAndFile(repository, "Класс BeforeAuthenticationFilter метод attemptAuthentication(). Попытка войти в систему", username);
         return super.attemptAuthentication(request, response);
     }
 

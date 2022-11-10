@@ -20,8 +20,7 @@ import java.util.HashMap;
 @EnableJpaRepositories(
         entityManagerFactoryRef = DatabaseOne.ENTITY_MANAGER_FACTORY,
         transactionManagerRef = DatabaseOne.TRANSACTION_MANAGER,
-        basePackages = DatabaseOne.JPA_REPOSITORY_PACKAGE
-)
+        basePackages = DatabaseOne.JPA_REPOSITORY_PACKAGE)
 @Configuration
 public class DatabaseOne {
 
@@ -33,18 +32,18 @@ public class DatabaseOne {
     public static final String DATABASE_PROPERTY = "oneDatabaseProperty";
     public static final String TRANSACTION_MANAGER = "oneTransactionManager";
 
-    private String url = "jdbc:postgresql://localhost:5432/medicine";
-    private String username = "postgres";
-    private String password = "postgres";
-    private String driver = "org.postgresql.Driver";
-
     @Bean(DATABASE_PROPERTY)
+    @ConfigurationProperties(prefix = PROPERTY_PREFIX)
     public DatabaseProperty appDatabaseProperty() {
         return new DatabaseProperty();
     }
 
     @Bean(DATA_SOURCE)
     public DataSource appDataSource() {
+        String url = "jdbc:postgresql://localhost:5432/medicine";
+        String username = "postgres";
+        String password = "postgres";
+        String driver = "org.postgresql.Driver";
         return DataSourceBuilder
                 .create()
                 .username(username)
@@ -55,9 +54,7 @@ public class DatabaseOne {
     }
 
     @Bean(ENTITY_MANAGER_FACTORY)
-    public LocalContainerEntityManagerFactoryBean appEntityManager(
-            @Qualifier(DATA_SOURCE) DataSource dataSource
-    ) {
+    public LocalContainerEntityManagerFactoryBean appEntityManager(@Qualifier(DATA_SOURCE) DataSource dataSource) {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPersistenceUnitName(ENTITY_MANAGER_FACTORY);
@@ -82,12 +79,6 @@ public class DatabaseOne {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "app-dbtwo-datasource")
-    public DataSource secondaryDataSource() {
-        return DataSourceBuilder.create().build();
-    }
-
-    @Bean
     @ConfigurationProperties(prefix = "datasource-secondary-liquibase")
     public LiquibaseProperties secondaryLiquibaseProperties() {
         return new LiquibaseProperties();
@@ -95,12 +86,12 @@ public class DatabaseOne {
 
     @Bean
     public SpringLiquibase secondaryLiquibase() {
-        return springLiquibase(secondaryDataSource(), secondaryLiquibaseProperties());
+        return springLiquibase(appDataSource(), secondaryLiquibaseProperties());
     }
 
     private SpringLiquibase springLiquibase(@Qualifier(DATA_SOURCE) DataSource dataSource, LiquibaseProperties properties) {
         SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setDataSource(appDataSource());
+        liquibase.setDataSource(dataSource);
         liquibase.setChangeLog(properties.getChangeLog());
         liquibase.setContexts(properties.getContexts());
         liquibase.setDefaultSchema(properties.getDefaultSchema());

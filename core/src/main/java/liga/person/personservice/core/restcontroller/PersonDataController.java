@@ -2,14 +2,15 @@ package liga.person.personservice.core.restcontroller;
 
 import liga.person.personservice.core.model.PersonData;
 import liga.person.personservice.core.service.PersonDataService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping("/personData")
 public class PersonDataController {
 

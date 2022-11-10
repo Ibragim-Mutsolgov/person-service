@@ -19,8 +19,6 @@ spring:
       platform: org.hibernate.dialect.PostgreSQLDialect
   jpa:
     open-in-view: false
-    hibernate:
-      ddl-auto: update
   thymeleaf:
     cache: false
 server:

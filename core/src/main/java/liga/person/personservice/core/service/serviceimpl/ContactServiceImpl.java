@@ -6,7 +6,6 @@ import liga.person.personservice.core.service.ContactService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class ContactServiceImpl implements ContactService {

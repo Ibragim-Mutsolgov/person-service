@@ -5,8 +5,6 @@ import liga.person.personservice.core.repository.UserRepository;
 import liga.person.personservice.core.service.UserService;
 import org.springframework.stereotype.Service;
 
-import java.util.logging.Logger;
-
 @Service
 public class UserServiceImpl implements UserService {
 

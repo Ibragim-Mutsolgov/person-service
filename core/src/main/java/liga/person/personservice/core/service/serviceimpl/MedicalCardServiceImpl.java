@@ -6,7 +6,6 @@ import liga.person.personservice.core.service.MedicalCardService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class MedicalCardServiceImpl implements MedicalCardService {

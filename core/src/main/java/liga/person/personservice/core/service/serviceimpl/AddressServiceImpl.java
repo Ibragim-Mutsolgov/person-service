@@ -6,14 +6,11 @@ import liga.person.personservice.core.service.AddressService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class AddressServiceImpl implements AddressService {
 
     private AddressRepository repository;
-
-    private Logger logger = Logger.getLogger(AddressServiceImpl.class.getName());
 
     public AddressServiceImpl(AddressRepository repository) {
         this.repository = repository;

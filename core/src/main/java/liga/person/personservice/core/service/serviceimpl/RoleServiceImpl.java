@@ -5,8 +5,6 @@ import liga.person.personservice.core.repository.RoleRepository;
 import liga.person.personservice.core.service.RoleService;
 import org.springframework.stereotype.Service;
 
-import java.util.logging.Logger;
-
 @Service
 public class RoleServiceImpl implements RoleService {
 

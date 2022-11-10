@@ -13,16 +13,12 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
-
 import java.util.HashMap;
-
-import static liga.person.personservice.core.configuration.DatabaseOne.*;
 
 @EnableJpaRepositories(
         entityManagerFactoryRef = DatabaseTwo.ENTITY_MANAGER_FACTORY,
         transactionManagerRef = DatabaseTwo.TRANSACTION_MANAGER,
-        basePackages = DatabaseTwo.JPA_REPOSITORY_PACKAGE
-)
+        basePackages = DatabaseTwo.JPA_REPOSITORY_PACKAGE)
 @Configuration
 public class DatabaseTwo {
 
@@ -34,11 +30,6 @@ public class DatabaseTwo {
     public static final String DATABASE_PROPERTY = "twoDatabaseProperty";
     public static final String TRANSACTION_MANAGER = "twoTransactionManager";
 
-    private String url = "jdbc:postgresql://localhost:5432/db_log";
-    private String username = "postgres";
-    private String password = "postgres";
-    private String driver = "org.postgresql.Driver";
-
     @Bean(DATABASE_PROPERTY)
     @ConfigurationProperties(prefix = PROPERTY_PREFIX)
     public DatabaseProperty appDatabaseProperty() {
@@ -46,9 +37,11 @@ public class DatabaseTwo {
     }
 
     @Bean(DATA_SOURCE)
-    public DataSource appDataSource(
-            @Qualifier(DATABASE_PROPERTY) DatabaseProperty databaseProperty
-    ) {
+    public DataSource appDataSource() {
+        String url = "jdbc:postgresql://localhost:5432/db_log";
+        String username = "postgres";
+        String password = "postgres";
+        String driver = "org.postgresql.Driver";
         return DataSourceBuilder
                 .create()
                 .username(username)
@@ -59,9 +52,7 @@ public class DatabaseTwo {
     }
 
     @Bean(ENTITY_MANAGER_FACTORY)
-    public LocalContainerEntityManagerFactoryBean appEntityManager(
-            @Qualifier(DATA_SOURCE) DataSource dataSource
-    ) {
+    public LocalContainerEntityManagerFactoryBean appEntityManager(@Qualifier(DATA_SOURCE) DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPersistenceUnitName(ENTITY_MANAGER_FACTORY);
@@ -77,8 +68,7 @@ public class DatabaseTwo {
     @Bean(TRANSACTION_MANAGER)
     public PlatformTransactionManager sqlSessionTemplate(
             @Qualifier(ENTITY_MANAGER_FACTORY) LocalContainerEntityManagerFactoryBean entityManager,
-            @Qualifier(DATA_SOURCE) DataSource dataSource
-    ) {
+            @Qualifier(DATA_SOURCE) DataSource dataSource) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManager.getObject());
         transactionManager.setDataSource(dataSource);
